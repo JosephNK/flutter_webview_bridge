@@ -1,39 +1,206 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Flutter WebView Bridge
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Flutter 앱과 웹뷰 간 브릿지 통신을 위한 JavaScript API
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+## 💡 주요 특징
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- **자동 FCM 토큰 관리**: Firebase 이벤트 발생 시 `navigator.deviceToken` 자동 설정
+- **실시간 앱 상태 감지**: 앱이 백그라운드/포그라운드로 전환될 때 자동 알림
+- **크로스 플랫폼**: iOS/Android 모두 지원
+- **Base64 이미지**: 카메라/갤러리에서 선택한 이미지를 Base64로 반환
 
-## Features
+## ⚠️ 주의사항
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **deviceId**: 앱 재설치 시 변경될 수 있음 (iOS: identifierForVendor, Android: ANDROID_ID)
+- **콜백 함수**: `callbackAppState`와 `callbackPostMessage`는 반드시 구현해야 함
+- **채널명**: `IN_APP_WEBVIEW_BRIDGE_CHANNEL` 정확히 사용해야 함
 
-## Getting started
+## 🚀 빠른 시작
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+### 1. WebView 브릿지 설정
 
-## Usage
+```typescript
+// 필수: 네이티브와 통신할 채널 설정
+interface WindowWithWebView extends Window {
+    IN_APP_WEBVIEW_BRIDGE_CHANNEL?: {
+        postMessage: (message: string) => void;
+    };
+}
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+// 네이티브에 메시지 전송
+const sendToNative = (message: any) => {
+    if (window.IN_APP_WEBVIEW_BRIDGE_CHANNEL?.postMessage) {
+        window.IN_APP_WEBVIEW_BRIDGE_CHANNEL.postMessage(JSON.stringify(message));
+    }
+};
 ```
 
-## Additional information
+### 2. 콜백 함수 구현
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```typescript
+// 앱 상태 변경 콜백 (필수)
+window.callbackAppState = (data: string) => {
+    const response = JSON.parse(data);
+    console.log('앱 상태:', response.data.state); // resumed, paused, inactive 등
+};
+
+// 네이티브에서 오는 모든 메시지 콜백 (필수)
+window.callbackPostMessage = (data: string) => {
+    const response = JSON.parse(data);
+    // 메시지 타입별 처리
+};
+```
+
+## 📱 앱 생명주기 상태
+
+| 상태 | 설명 |
+|------|------|
+| `resumed` | 앱 활성화 (포그라운드) |
+| `paused` | 앱 백그라운드 |
+| `inactive` | 앱 전환 중 |
+| `detached` | 앱 종료 직전 |
+| `hidden` | 앱 숨겨짐 |
+
+**콜백 응답:**
+```json
+{
+  "type": "APP_STATE_CHANGE",
+  "data": {
+    "state": "resumed"
+  }
+}
+```
+
+## 📋 API 사용법
+
+### 기본 요청 구조
+```typescript
+const request = {
+    type: "API_NAME",
+    data: { /* 필요한 데이터 */ }
+};
+sendToNative(request);
+```
+
+### 푸시 알림
+```typescript
+// FCM 토큰 조회
+sendToNative({ type: "PUSH_TOKEN", data: null });
+```
+**응답:**
+```json
+{
+  "type": "PUSH_TOKEN",
+  "data": {
+    "token": "fcm_token_value_here"
+  }
+}
+```
+
+### 디바이스 정보
+```typescript
+// 디바이스 정보 조회 (기종, OS, 앱버전 등)
+sendToNative({ type: "DEVICE_INFO", data: null });
+```
+**응답:**
+```json
+{
+  "type": "DEVICE_INFO",
+  "data": {
+    "systemName": "iOS",
+    "manufacturer": "iPhone", 
+    "model": "iPhone 15 Pro",
+    "deviceId": "F5046170-6EBE-420E-8ABD-1BFA3E9FB56C",
+    "systemVersion": "18.6",
+    "bundleId": "kr.shop.sazo.test",
+    "buildNumber": "1",
+    "version": "1.0.0",
+    "readableVersion": "1.0.0.1",
+    "deviceName": "iPhone",
+    "deviceLocale": "ko_KR",
+    "timezone": "Asia/Seoul"
+  }
+}
+```
+
+### 미디어 접근
+```typescript
+// 카메라로 사진 촬영
+sendToNative({ type: "CAMERA_ACCESS", data: null });
+
+// 갤러리에서 사진 선택
+sendToNative({ type: "PHOTO_LIBRARY_ACCESS", data: null });
+```
+
+> ⚠️ **중요**: base64Data To Blob 변환해서 사용
+
+**응답:**
+```json
+{
+  "type": "CAMERA_ACCESS", // 또는 "PHOTO_LIBRARY_ACCESS"
+  "data": [
+    {
+      "fileName": "image_picker_D1A5F6B4-B15F-4F2E-A57F-05E45F8476BC-551-000000058A4C1A20.jpg",
+      "mimeType": "image/jpeg",
+      "base64Data": "/4Qk0RXhpZgAATU0AKgAAAAgACgEPAAIAAAAGAAAAhg...",
+      "size": 91680
+    }
+  ]
+}
+```
+
+### 클립보드
+```typescript
+// 텍스트 복사 (응답 없음)
+sendToNative({ 
+    type: "SET_CLIPBOARD", 
+    data: { text: "복사할 텍스트" } 
+});
+
+// 클립보드 내용 가져오기
+sendToNative({ type: "GET_CLIPBOARD", data: null });
+```
+**GET_CLIPBOARD 응답:**
+```json
+{
+  "type": "GET_CLIPBOARD", 
+  "data": {
+    "text": "클립보드에 있던 텍스트"
+  }
+}
+```
+
+### 브라우저 열기
+```typescript
+// 인앱 브라우저 (응답 없음)
+sendToNative({ 
+    type: "OPEN_IN_APP_BROWSER", 
+    data: { url: "https://example.com" } 
+});
+
+// 외부 브라우저 (응답 없음)
+sendToNative({ 
+    type: "OPEN_EXTERNAL_BROWSER", 
+    data: { url: "https://example.com" } 
+});
+```
+
+### 시스템 제어
+```typescript
+// 앱 설정 열기 (응답 없음)
+sendToNative({ type: "OPEN_APP_SETTINGS", data: null });
+
+// 앱 종료 (응답 없음)
+sendToNative({ type: "EXIT_APP", data: null });
+```
+
+## ❌ 오류 응답
+모든 API에서 오류 발생 시:
+```json
+{
+  "type": "요청한_API_타입",
+  "error": "This request is not supported"
+}
+```
+
+---

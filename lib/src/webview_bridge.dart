@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -56,12 +57,34 @@ class FlutterWebViewBridgeJavaScriptChannel {
           case WebViewBridgeFeatureType.cameraAccess:
             final isGranted = await requestPermission(ph.Permission.camera);
             if (!isGranted) return;
-            // TODO: Open Camera
+            final ImagePicker picker = ImagePicker();
+            final XFile? photo = await picker.pickImage(
+              source: ImageSource.camera,
+            );
+            final Map<String, dynamic>? imageData = await convertImageToBase64(
+              photo,
+            );
+            if (imageData != null) {
+              sendData['data'] = [imageData];
+            } else {
+              sendData['error'] = 'Failed to convert image to base64';
+            }
             break;
           case WebViewBridgeFeatureType.photoLibraryAccess:
             final isGranted = await requestPermission(ph.Permission.photos);
             if (!isGranted) return;
-            // TODO: Open Photo Library
+            final ImagePicker picker = ImagePicker();
+            final XFile? image = await picker.pickImage(
+              source: ImageSource.gallery,
+            );
+            final Map<String, dynamic>? imageData = await convertImageToBase64(
+              image,
+            );
+            if (imageData != null) {
+              sendData['data'] = [imageData];
+            } else {
+              sendData['error'] = 'Failed to convert image to base64';
+            }
             break;
           case WebViewBridgeFeatureType.setClipboard:
             try {
@@ -207,5 +230,40 @@ extension FlutterWebViewBridgeJavaScriptChannelPermistion
       }
     }
     return true;
+  }
+}
+
+extension FlutterWebViewBridgeJavaScriptChannelImage
+    on FlutterWebViewBridgeJavaScriptChannel {
+  Future<Map<String, dynamic>?> convertImageToBase64(XFile? file) async {
+    if (file == null) return null;
+    // Convert image to base64
+    final File imageFile = File(file.path);
+    final List<int> imageBytes = await imageFile.readAsBytes();
+    final String base64Image = base64Encode(imageBytes);
+    final Map<String, dynamic> imageData = {
+      'fileName': file.name,
+      'mimeType': _getMimeType(file.path),
+      'base64Data': base64Image,
+      'size': imageBytes.length,
+    };
+    return imageData;
+  }
+
+  String _getMimeType(String filePath) {
+    final String extension = filePath.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg';
+      case 'png':
+        return 'image/png';
+      case 'gif':
+        return 'image/gif';
+      case 'webp':
+        return 'image/webp';
+      default:
+        return 'image/jpeg';
+    }
   }
 }
