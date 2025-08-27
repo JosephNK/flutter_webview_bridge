@@ -194,6 +194,42 @@ sendToNative({ type: "OPEN_APP_SETTINGS", data: null });
 sendToNative({ type: "EXIT_APP", data: null });
 ```
 
+### Analytics
+```typescript
+// Google Analytics 이벤트 전송 (응답 없음)
+sendToNative({ type: "GOOGLE_ANALYTICS", data: {
+    eventType: "SET_USER_ID",
+    item: {
+        userId: "unique_user_id_here",
+    }
+} });
+
+sendToNative({ type: "GOOGLE_ANALYTICS", data: {
+    eventType: "SEND_LOG_EVENT",
+    item: {
+        eventName: "event_name_here",
+        parameters: {
+            ...
+        },
+    }
+} });
+
+sendToNative({ type: "GOOGLE_ANALYTICS", data: {
+    eventType: "SEND_LOG_PURCHASE_EVENT",
+    item: {
+        eventName: "purchase",
+        parameters: {
+            ecommerce: {
+                ...
+            }
+        },
+    },
+} });
+
+// AppsFlyer Analytics 이벤트 전송 (응답 없음)
+sendToNative({ type: "APPS_FLYER_ANALYTICS", data: null });
+```
+
 ## ❌ 오류 응답
 모든 API에서 오류 발생 시:
 ```json

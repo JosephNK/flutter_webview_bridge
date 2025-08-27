@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'webview_types.dart';
+import 'types.dart';
 
 class WebViewMessage extends Equatable {
   final WebViewBridgeFeatureType type;

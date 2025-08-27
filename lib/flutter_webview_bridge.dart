@@ -1,4 +1,4 @@
-export 'src/webview_bridge.dart';
-export 'src/webview_bridge_controller.dart';
-export 'src/webview_token.dart';
-export 'src/webview_types.dart';
+export 'src/bridge/bridge.dart';
+export 'src/bridge/bridge_controller.dart';
+export 'src/models/token.dart';
+export 'src/models/types.dart';

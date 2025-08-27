@@ -9,6 +9,8 @@ enum WebViewBridgeFeatureType {
   openInAppBrowser,
   openExternalBrowser,
   openAppSettings,
+  googleAnalytics,
+  appsFlyerAnalytics,
   exitApp,
 }
 
@@ -37,6 +39,10 @@ extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
         return 'OPEN_APP_SETTINGS';
       case WebViewBridgeFeatureType.exitApp:
         return 'EXIT_APP';
+      case WebViewBridgeFeatureType.googleAnalytics:
+        return 'GOOGLE_ANALYTICS';
+      case WebViewBridgeFeatureType.appsFlyerAnalytics:
+        return 'APPS_FLYER_ANALYTICS';
     }
   }
 }
@@ -64,8 +70,43 @@ extension WebViewBridgeFeatureTypeString on String {
         return WebViewBridgeFeatureType.openExternalBrowser;
       case 'OPEN_APP_SETTINGS':
         return WebViewBridgeFeatureType.openAppSettings;
+      case 'GOOGLE_ANALYTICS':
+        return WebViewBridgeFeatureType.googleAnalytics;
+      case 'APPS_FLYER_ANALYTICS':
+        return WebViewBridgeFeatureType.appsFlyerAnalytics;
       case 'EXIT_APP':
         return WebViewBridgeFeatureType.exitApp;
+    }
+    return null;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+enum GoogleAnalyticsEventType { setUserId, sendLogEvent, sendLogPurchaseEvent }
+
+extension GoogleAnalyticsEventTypeValue on GoogleAnalyticsEventType {
+  String get value {
+    switch (this) {
+      case GoogleAnalyticsEventType.setUserId:
+        return 'SET_USER_ID';
+      case GoogleAnalyticsEventType.sendLogEvent:
+        return 'SEND_LOG_EVENT';
+      case GoogleAnalyticsEventType.sendLogPurchaseEvent:
+        return 'SEND_LOG_PURCHASE_EVENT';
+    }
+  }
+}
+
+extension GoogleAnalyticsEventTypeString on String {
+  GoogleAnalyticsEventType? get googleAnalyticsEventType {
+    switch (this) {
+      case 'SET_USER_ID':
+        return GoogleAnalyticsEventType.setUserId;
+      case 'SEND_LOG_EVENT':
+        return GoogleAnalyticsEventType.sendLogEvent;
+      case 'SEND_LOG_PURCHASE_EVENT':
+        return GoogleAnalyticsEventType.sendLogPurchaseEvent;
     }
     return null;
   }

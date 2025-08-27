@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_webview_bridge/flutter_webview_bridge.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -12,9 +12,11 @@ class WebViewBridgeController {
   final Queue<_QueuedRequest> _requestQueue = Queue<_QueuedRequest>();
 
   void initFlutterWebViewBridgeJavaScriptChannel(
+    BuildContext context,
     WebViewController webViewController,
   ) {
     _channel ??= FlutterWebViewBridgeJavaScriptChannel(
+      context: context,
       webViewController: webViewController,
     );
     _channel?.addJavaScriptChannel();
