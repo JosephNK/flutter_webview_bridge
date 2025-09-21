@@ -9,9 +9,13 @@ enum WebViewBridgeFeatureType {
   openInAppBrowser,
   openExternalBrowser,
   openAppSettings,
+  exitApp,
   googleAnalytics,
   appsFlyerAnalytics,
-  exitApp,
+  googleSignInLogin,
+  googleSignInLogout,
+  appleSignInLogin,
+  appleSignInLogout,
 }
 
 extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
@@ -43,6 +47,14 @@ extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
         return 'GOOGLE_ANALYTICS';
       case WebViewBridgeFeatureType.appsFlyerAnalytics:
         return 'APPS_FLYER_ANALYTICS';
+      case WebViewBridgeFeatureType.googleSignInLogin:
+        return 'GOOGLE_SIGN_IN_LOGIN';
+      case WebViewBridgeFeatureType.googleSignInLogout:
+        return 'GOOGLE_SIGN_IN_LOGOUT';
+      case WebViewBridgeFeatureType.appleSignInLogin:
+        return 'APPLE_SIGN_IN_LOGIN';
+      case WebViewBridgeFeatureType.appleSignInLogout:
+        return 'APPLE_SIGN_IN_LOGOUT';
     }
   }
 }
@@ -70,12 +82,20 @@ extension WebViewBridgeFeatureTypeString on String {
         return WebViewBridgeFeatureType.openExternalBrowser;
       case 'OPEN_APP_SETTINGS':
         return WebViewBridgeFeatureType.openAppSettings;
+      case 'EXIT_APP':
+        return WebViewBridgeFeatureType.exitApp;
       case 'GOOGLE_ANALYTICS':
         return WebViewBridgeFeatureType.googleAnalytics;
       case 'APPS_FLYER_ANALYTICS':
         return WebViewBridgeFeatureType.appsFlyerAnalytics;
-      case 'EXIT_APP':
-        return WebViewBridgeFeatureType.exitApp;
+      case 'GOOGLE_SIGN_IN_LOGIN':
+        return WebViewBridgeFeatureType.googleSignInLogin;
+      case 'GOOGLE_SIGN_IN_LOGOUT':
+        return WebViewBridgeFeatureType.googleSignInLogout;
+      case 'APPLE_SIGN_IN_LOGIN':
+        return WebViewBridgeFeatureType.appleSignInLogin;
+      case 'APPLE_SIGN_IN_LOGOUT':
+        return WebViewBridgeFeatureType.appleSignInLogout;
     }
     return null;
   }

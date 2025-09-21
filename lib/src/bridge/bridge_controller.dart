@@ -13,11 +13,13 @@ class WebViewBridgeController {
 
   void initFlutterWebViewBridgeJavaScriptChannel(
     BuildContext context,
-    WebViewController webViewController,
-  ) {
+    WebViewController webViewController, {
+    required String? googleServerClientId,
+  }) {
     _channel ??= FlutterWebViewBridgeJavaScriptChannel(
       context: context,
       webViewController: webViewController,
+      googleServerClientId: googleServerClientId,
     );
     _channel?.addJavaScriptChannel();
 
@@ -57,7 +59,10 @@ class WebViewBridgeController {
   Future<void> runJavaScriptSetPushToken(String token) async {
     return _executeOrQueue(
       operation: () async {
+        // navigator.deviceToken 셋팅
         await _channel!.runJavaScriptSetPushToken(token);
+
+        // WebViewBridge 푸시 토큰 전달
         Map<String, Object?> sendData = {
           'type': WebViewBridgeFeatureType.pushToken.value,
           'data': {'token': token},

@@ -17,17 +17,22 @@ import 'events/open_in_app_browser.dart';
 import 'events/photo_library_access.dart';
 import 'events/push_token.dart';
 import 'events/set_clipboard.dart';
+import 'events/social_sign_in.dart';
 
 class FlutterWebViewBridgeJavaScriptChannel {
   final BuildContext context;
   final WebViewController webViewController;
   final String channelName;
+  final String? googleServerClientId;
 
   FlutterWebViewBridgeJavaScriptChannel({
     required this.context,
     required this.webViewController,
     this.channelName = 'IN_APP_WEBVIEW_BRIDGE_CHANNEL',
-  });
+    required this.googleServerClientId,
+  }) {
+    SocialSignIn.shared.initialize(googleServerClientId: googleServerClientId);
+  }
 
   Future<void> addJavaScriptChannel() {
     return webViewController.addJavaScriptChannel(
@@ -94,6 +99,24 @@ class FlutterWebViewBridgeJavaScriptChannel {
             case WebViewBridgeFeatureType.exitApp:
               sendData = await ExitAppEvent().process(context);
               break;
+            case WebViewBridgeFeatureType.googleSignInLogin:
+              sendData = await SocialSignIn.shared.process(
+                context,
+                action: 'login',
+              );
+              break;
+            case WebViewBridgeFeatureType.googleSignInLogout:
+              sendData = await SocialSignIn.shared.process(
+                context,
+                action: 'logout',
+              );
+              break;
+            case WebViewBridgeFeatureType.appleSignInLogin:
+              // TODO: Handle this case.
+              throw UnimplementedError();
+            case WebViewBridgeFeatureType.appleSignInLogout:
+              // TODO: Handle this case.
+              throw UnimplementedError();
           }
         } catch (e) {
           if (context.mounted) {
@@ -113,13 +136,16 @@ class FlutterWebViewBridgeJavaScriptChannel {
   }
 
   Future<Object> runJavaScriptReturningResultAppState(String jsonData) async {
+    // JSON 문자열에서 특수문자 이스케이프 처리
+    final escapedData = jsonData.replaceAll("'", "\\'").replaceAll('\n', '\\n');
+
     return webViewController.runJavaScriptReturningResult('''
         (function() {
           if (typeof window.callbackAppState === 'function') {
-            window.callbackAppState('$jsonData');
+            window.callbackAppState('$escapedData');
             return 'success';
           } else if (typeof document.callbackAppState === 'function') {
-            document.callbackAppState('$jsonData');
+            document.callbackAppState('$escapedData');
             return 'success';
           }
           throw new Error('callbackAppState function not available');
@@ -130,13 +156,16 @@ class FlutterWebViewBridgeJavaScriptChannel {
   Future<Object> runJavaScriptReturningResultPostMessage(
     String jsonData,
   ) async {
+    // JSON 문자열에서 특수문자 이스케이프 처리
+    final escapedData = jsonData.replaceAll("'", "\\'").replaceAll('\n', '\\n');
+
     return webViewController.runJavaScriptReturningResult('''
         (function() {
           if (typeof window.callbackPostMessage === 'function') {
-            window.callbackPostMessage('$jsonData');
+            window.callbackPostMessage('$escapedData');
             return 'success';
           } else if (typeof document.callbackPostMessage === 'function') {
-            document.callbackPostMessage('$jsonData');
+            document.callbackPostMessage('$escapedData');
             return 'success';
           }
           throw new Error('callbackPostMessage function not available');

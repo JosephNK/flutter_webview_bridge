@@ -82,6 +82,41 @@ const request = {
 sendToNative(request);
 ```
 
+### Google Sign-In
+```typescript
+sendToNative({ type: "GOOGLE_SIGN_IN_LOGIN", data: null });
+```
+**응답:**
+```json
+{
+  "type": "GOOGLE_SIGN_IN_LOGIN",
+  "data": {
+    "id": "12345678901234567890",
+    "displayName": "User Name",
+    "email": "abc@gmail.com", 
+    "photoUrl": "https://lh3.googleusercontent.com/a/AAcHTte...",
+    "idToken": "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."
+  }
+}
+```
+
+```typescript
+sendToNative({ type: "GOOGLE_SIGN_IN_LOGOUT", data: null });
+```
+**응답:**
+```json
+{
+  "type": "GOOGLE_SIGN_IN_LOGOUT",
+  "data": {
+    "id": "",
+    "displayName": "",
+    "email": "", 
+    "photoUrl": "",
+    "idToken": ""
+  }
+}
+```
+
 ### 푸시 알림
 ```typescript
 // FCM 토큰 조회
