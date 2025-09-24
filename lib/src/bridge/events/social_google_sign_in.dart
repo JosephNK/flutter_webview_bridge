@@ -5,12 +5,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../models/types.dart';
 
-class SocialSignIn {
-  static final SocialSignIn _instance = SocialSignIn._internal();
-  static SocialSignIn get shared => _instance;
-  SocialSignIn._internal();
+class SocialGoogleSignIn {
+  static final SocialGoogleSignIn _instance = SocialGoogleSignIn._internal();
+  static SocialGoogleSignIn get shared => _instance;
+  SocialGoogleSignIn._internal();
 
-  Completer<GoogleSignInAccount?>? _loginCompleter;
+  // Completer<GoogleSignInAccount?>? _loginCompleter;
 
   // https://developers.google.com/identity/protocols/oauth2/scopes?hl=ko
   final List<String> scopes = <String>[
@@ -50,18 +50,20 @@ class SocialSignIn {
 
           // final user = await _loginCompleter!.future;
 
-          sendData['id'] = user.id;
-          sendData['displayName'] = user.displayName;
-          sendData['email'] = user.email;
-          sendData['photoUrl'] = user.photoUrl;
-          sendData['idToken'] = idToken ?? '';
+          sendData['data'] = {
+            'id': user.id,
+            'displayName': user.displayName,
+            'email': user.email,
+            'photoUrl': user.photoUrl,
+            'idToken': idToken ?? '',
+          };
         } catch (e) {
           String errorMessage = e is GoogleSignInException
               ? _errorMessageFromSignInException(e)
               : 'Unknown error: $e';
           sendData['error'] = errorMessage;
         } finally {
-          _loginCompleter = null;
+          // _loginCompleter = null;
         }
       }
     }
@@ -72,11 +74,13 @@ class SocialSignIn {
         try {
           await GoogleSignIn.instance.disconnect();
 
-          sendData['id'] = null;
-          sendData['displayName'] = null;
-          sendData['email'] = null;
-          sendData['photoUrl'] = null;
-          sendData['idToken'] = null;
+          sendData['data'] = {
+            'id': null,
+            'displayName': null,
+            'email': null,
+            'photoUrl': null,
+            'idToken': null,
+          };
         } catch (e) {
           String errorMessage = e is GoogleSignInException
               ? _errorMessageFromSignInException(e)
@@ -93,51 +97,51 @@ class SocialSignIn {
   /// Private methods (Event Handlers)
   /// =========================================================================
 
-  Future<void> _handleAuthenticationEvent(
-    GoogleSignInAuthenticationEvent event,
-  ) async {
-    final GoogleSignInAccount? user = switch (event) {
-      GoogleSignInAuthenticationEventSignIn() => event.user,
-      GoogleSignInAuthenticationEventSignOut() => null,
-    };
-
-    try {
-      final GoogleSignInClientAuthorization? clientAuthorization = await user
-          ?.authorizationClient
-          .authorizationForScopes(scopes);
-
-      GoogleSignInAccount? currentUser = user;
-      bool isAuthorized = clientAuthorization != null;
-
-      if (currentUser != null && isAuthorized) {
-        // Completer가 있으면 사용자 정보 전달
-        if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
-          _loginCompleter!.complete(currentUser);
-        }
-      } else {
-        // 로그인 실패 시
-        if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
-          _loginCompleter!.complete(null);
-        }
-      }
-    } catch (e) {
-      // 에러 발생 시 Completer 완료
-      if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
-        _loginCompleter!.completeError(e);
-      }
-    }
-  }
-
-  Future<void> _handleAuthenticationError(Object e) async {
-    String errorMessage = e is GoogleSignInException
-        ? _errorMessageFromSignInException(e)
-        : 'Unknown error: $e';
-
-    // 에러 발생 시 Completer 완료
-    if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
-      _loginCompleter!.completeError(e);
-    }
-  }
+  // Future<void> _handleAuthenticationEvent(
+  //   GoogleSignInAuthenticationEvent event,
+  // ) async {
+  //   final GoogleSignInAccount? user = switch (event) {
+  //     GoogleSignInAuthenticationEventSignIn() => event.user,
+  //     GoogleSignInAuthenticationEventSignOut() => null,
+  //   };
+  //
+  //   try {
+  //     final GoogleSignInClientAuthorization? clientAuthorization = await user
+  //         ?.authorizationClient
+  //         .authorizationForScopes(scopes);
+  //
+  //     GoogleSignInAccount? currentUser = user;
+  //     bool isAuthorized = clientAuthorization != null;
+  //
+  //     if (currentUser != null && isAuthorized) {
+  //       // Completer가 있으면 사용자 정보 전달
+  //       if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
+  //         _loginCompleter!.complete(currentUser);
+  //       }
+  //     } else {
+  //       // 로그인 실패 시
+  //       if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
+  //         _loginCompleter!.complete(null);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     // 에러 발생 시 Completer 완료
+  //     if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
+  //       _loginCompleter!.completeError(e);
+  //     }
+  //   }
+  // }
+  //
+  // Future<void> _handleAuthenticationError(Object e) async {
+  //   String errorMessage = e is GoogleSignInException
+  //       ? _errorMessageFromSignInException(e)
+  //       : 'Unknown error: $e';
+  //
+  //   // 에러 발생 시 Completer 완료
+  //   if (_loginCompleter != null && !_loginCompleter!.isCompleted) {
+  //     _loginCompleter!.completeError(e);
+  //   }
+  // }
 
   String _errorMessageFromSignInException(GoogleSignInException e) {
     return switch (e.code) {

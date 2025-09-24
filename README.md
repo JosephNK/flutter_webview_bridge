@@ -83,6 +83,9 @@ sendToNative(request);
 ```
 
 ### Google Sign-In
+
+**요청:**
+구글 로그인
 ```typescript
 sendToNative({ type: "GOOGLE_SIGN_IN_LOGIN", data: null });
 ```
@@ -100,6 +103,8 @@ sendToNative({ type: "GOOGLE_SIGN_IN_LOGIN", data: null });
 }
 ```
 
+**요청:**
+구글 로그아웃
 ```typescript
 sendToNative({ type: "GOOGLE_SIGN_IN_LOGOUT", data: null });
 ```
@@ -117,7 +122,49 @@ sendToNative({ type: "GOOGLE_SIGN_IN_LOGOUT", data: null });
 }
 ```
 
+### RefreshToken
+
+**요청:**
+RefreshToken 읽기
+```typescript
+sendToNative({ type: "REFRESH_TOKEN_READ", data: null });
+```
+**응답:**
+```json
+{
+  "type": "REFRESH_TOKEN_READ",
+  "data": "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."
+}
+```
+**요청:**
+RefreshToken 저장
+```typescript
+sendToNative({ type: "REFRESH_TOKEN_WRITE", data: null });
+```
+**응답:**
+```json
+{
+  "type": "REFRESH_TOKEN_WRITE",
+  "data": "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."
+}
+```
+
+**요청:**
+RefreshToken 삭제
+```typescript
+sendToNative({ type: "REFRESH_TOKEN_DELETE", data: null });
+```
+**응답:**
+```json
+{
+  "type": "REFRESH_TOKEN_DELETE",
+  "data": ""
+}
+```
+
 ### 푸시 알림
+
+**요청:**
 ```typescript
 // FCM 토큰 조회
 sendToNative({ type: "PUSH_TOKEN", data: null });
@@ -133,6 +180,8 @@ sendToNative({ type: "PUSH_TOKEN", data: null });
 ```
 
 ### 디바이스 정보
+
+**요청:**
 ```typescript
 // 디바이스 정보 조회 (기종, OS, 앱버전 등)
 sendToNative({ type: "DEVICE_INFO", data: null });
@@ -159,6 +208,8 @@ sendToNative({ type: "DEVICE_INFO", data: null });
 ```
 
 ### 미디어 접근
+
+**요청:**
 ```typescript
 // 카메라로 사진 촬영
 sendToNative({ type: "CAMERA_ACCESS", data: null });
@@ -185,6 +236,8 @@ sendToNative({ type: "PHOTO_LIBRARY_ACCESS", data: null });
 ```
 
 ### 클립보드
+
+**요청:**
 ```typescript
 // 텍스트 복사 (응답 없음)
 sendToNative({ 
@@ -195,7 +248,7 @@ sendToNative({
 // 클립보드 내용 가져오기
 sendToNative({ type: "GET_CLIPBOARD", data: null });
 ```
-**GET_CLIPBOARD 응답:**
+**응답:**
 ```json
 {
   "type": "GET_CLIPBOARD", 
@@ -206,6 +259,8 @@ sendToNative({ type: "GET_CLIPBOARD", data: null });
 ```
 
 ### 브라우저 열기
+
+**요청:**
 ```typescript
 // 인앱 브라우저 (응답 없음)
 sendToNative({ 
@@ -221,6 +276,8 @@ sendToNative({
 ```
 
 ### 시스템 제어
+
+**요청:**
 ```typescript
 // 앱 설정 열기 (응답 없음)
 sendToNative({ type: "OPEN_APP_SETTINGS", data: null });
@@ -230,6 +287,8 @@ sendToNative({ type: "EXIT_APP", data: null });
 ```
 
 ### Analytics
+
+**요청:**
 ```typescript
 // Google Analytics 이벤트 전송 (응답 없음)
 sendToNative({ type: "GOOGLE_ANALYTICS", data: {

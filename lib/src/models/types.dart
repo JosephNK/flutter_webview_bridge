@@ -16,6 +16,9 @@ enum WebViewBridgeFeatureType {
   googleSignInLogout,
   appleSignInLogin,
   appleSignInLogout,
+  refreshTokenRead,
+  refreshTokenWrite,
+  refreshTokenDelete,
 }
 
 extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
@@ -55,6 +58,12 @@ extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
         return 'APPLE_SIGN_IN_LOGIN';
       case WebViewBridgeFeatureType.appleSignInLogout:
         return 'APPLE_SIGN_IN_LOGOUT';
+      case WebViewBridgeFeatureType.refreshTokenRead:
+        return 'REFRESH_TOKEN_READ';
+      case WebViewBridgeFeatureType.refreshTokenWrite:
+        return 'REFRESH_TOKEN_WRITE';
+      case WebViewBridgeFeatureType.refreshTokenDelete:
+        return 'REFRESH_TOKEN_DELETE';
     }
   }
 }
@@ -96,6 +105,12 @@ extension WebViewBridgeFeatureTypeString on String {
         return WebViewBridgeFeatureType.appleSignInLogin;
       case 'APPLE_SIGN_IN_LOGOUT':
         return WebViewBridgeFeatureType.appleSignInLogout;
+      case 'REFRESH_TOKEN_READ':
+        return WebViewBridgeFeatureType.refreshTokenRead;
+      case 'REFRESH_TOKEN_WRITE':
+        return WebViewBridgeFeatureType.refreshTokenWrite;
+      case 'REFRESH_TOKEN_DELETE':
+        return WebViewBridgeFeatureType.refreshTokenDelete;
     }
     return null;
   }

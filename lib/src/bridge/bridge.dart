@@ -16,8 +16,9 @@ import 'events/open_external_browser.dart';
 import 'events/open_in_app_browser.dart';
 import 'events/photo_library_access.dart';
 import 'events/push_token.dart';
+import 'events/refresh_token.dart';
 import 'events/set_clipboard.dart';
-import 'events/social_sign_in.dart';
+import 'events/social_google_sign_in.dart';
 
 class FlutterWebViewBridgeJavaScriptChannel {
   final BuildContext context;
@@ -31,7 +32,9 @@ class FlutterWebViewBridgeJavaScriptChannel {
     this.channelName = 'IN_APP_WEBVIEW_BRIDGE_CHANNEL',
     required this.googleServerClientId,
   }) {
-    SocialSignIn.shared.initialize(googleServerClientId: googleServerClientId);
+    SocialGoogleSignIn.shared.initialize(
+      googleServerClientId: googleServerClientId,
+    );
   }
 
   Future<void> addJavaScriptChannel() {
@@ -95,18 +98,17 @@ class FlutterWebViewBridgeJavaScriptChannel {
             case WebViewBridgeFeatureType.appsFlyerAnalytics:
               // TODO: Handle this case.
               throw UnimplementedError();
-              break;
             case WebViewBridgeFeatureType.exitApp:
               sendData = await ExitAppEvent().process(context);
               break;
             case WebViewBridgeFeatureType.googleSignInLogin:
-              sendData = await SocialSignIn.shared.process(
+              sendData = await SocialGoogleSignIn.shared.process(
                 context,
                 action: 'login',
               );
               break;
             case WebViewBridgeFeatureType.googleSignInLogout:
-              sendData = await SocialSignIn.shared.process(
+              sendData = await SocialGoogleSignIn.shared.process(
                 context,
                 action: 'logout',
               );
@@ -117,6 +119,25 @@ class FlutterWebViewBridgeJavaScriptChannel {
             case WebViewBridgeFeatureType.appleSignInLogout:
               // TODO: Handle this case.
               throw UnimplementedError();
+            case WebViewBridgeFeatureType.refreshTokenRead:
+              sendData = await RefreshTokenEvent().process(
+                context,
+                action: 'read',
+              );
+              break;
+            case WebViewBridgeFeatureType.refreshTokenWrite:
+              sendData = await RefreshTokenEvent().process(
+                context,
+                action: 'write',
+                data: data,
+              );
+              break;
+            case WebViewBridgeFeatureType.refreshTokenDelete:
+              sendData = await RefreshTokenEvent().process(
+                context,
+                action: 'delete',
+              );
+              break;
           }
         } catch (e) {
           if (context.mounted) {
