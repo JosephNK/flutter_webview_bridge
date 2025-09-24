@@ -139,7 +139,7 @@ sendToNative({ type: "REFRESH_TOKEN_READ", data: null });
 **요청:**
 RefreshToken 저장
 ```typescript
-sendToNative({ type: "REFRESH_TOKEN_WRITE", data: null });
+sendToNative({ type: "REFRESH_TOKEN_WRITE", data: "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."});
 ```
 **응답:**
 ```json
