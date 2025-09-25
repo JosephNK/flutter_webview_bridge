@@ -29,21 +29,17 @@ class RefreshTokenEvent {
       sendData['type'] = WebViewBridgeFeatureType.refreshTokenWrite.value;
 
       // Set the refresh token
-      if (data is Map) {
-        final refreshToken = data['refreshToken'] as String?;
-        if (refreshToken != null) {
-          final r = await prefs.setString(kRefreshTokenKey, refreshToken);
-          if (r == true) {
-            sendData['data'] = refreshToken;
-          } else {
-            sendData['error'] = 'Failed to store the refresh token';
-          }
+      final refreshToken = data as String?;
+      if (refreshToken != null) {
+        final r = await prefs.setString(kRefreshTokenKey, refreshToken);
+        if (r == true) {
+          sendData['data'] = refreshToken;
         } else {
-          sendData['error'] =
-              'Refresh token data is required for store refresh write';
+          sendData['error'] = 'Failed to store the refresh token';
         }
       } else {
-        sendData['error'] = 'Invalid data type for store refresh write';
+        sendData['error'] =
+            'Refresh token data is required for store refresh write';
       }
     } else if (action == 'delete') {
       sendData['type'] = WebViewBridgeFeatureType.refreshTokenDelete.value;
