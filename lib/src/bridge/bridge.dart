@@ -18,7 +18,8 @@ import 'events/photo_library_access.dart';
 import 'events/push_token.dart';
 import 'events/refresh_token.dart';
 import 'events/set_clipboard.dart';
-import 'events/social_google_sign_in.dart';
+import 'events/sign_in_apple.dart';
+import 'events/sign_in_google.dart';
 
 class FlutterWebViewBridgeJavaScriptChannel {
   final BuildContext context;
@@ -32,9 +33,7 @@ class FlutterWebViewBridgeJavaScriptChannel {
     this.channelName = 'IN_APP_WEBVIEW_BRIDGE_CHANNEL',
     required this.googleServerClientId,
   }) {
-    SocialGoogleSignIn.shared.initialize(
-      googleServerClientId: googleServerClientId,
-    );
+    SignInGoogle.shared.initialize(googleServerClientId: googleServerClientId);
   }
 
   Future<void> addJavaScriptChannel() {
@@ -102,23 +101,23 @@ class FlutterWebViewBridgeJavaScriptChannel {
               sendData = await ExitAppEvent().process(context);
               break;
             case WebViewBridgeFeatureType.googleSignInLogin:
-              sendData = await SocialGoogleSignIn.shared.process(
+              sendData = await SignInGoogle.shared.process(
                 context,
                 action: 'login',
               );
               break;
             case WebViewBridgeFeatureType.googleSignInLogout:
-              sendData = await SocialGoogleSignIn.shared.process(
+              sendData = await SignInGoogle.shared.process(
                 context,
                 action: 'logout',
               );
               break;
             case WebViewBridgeFeatureType.appleSignInLogin:
-              // TODO: Handle this case.
-              throw UnimplementedError();
+              sendData = await SignInApple().process(context, action: 'login');
+              break;
             case WebViewBridgeFeatureType.appleSignInLogout:
-              // TODO: Handle this case.
-              throw UnimplementedError();
+              sendData = await SignInApple().process(context, action: 'logout');
+              break;
             case WebViewBridgeFeatureType.refreshTokenRead:
               sendData = await RefreshTokenEvent().process(
                 context,

@@ -5,10 +5,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../models/types.dart';
 
-class SocialGoogleSignIn {
-  static final SocialGoogleSignIn _instance = SocialGoogleSignIn._internal();
-  static SocialGoogleSignIn get shared => _instance;
-  SocialGoogleSignIn._internal();
+class SignInGoogle {
+  static final SignInGoogle _instance = SignInGoogle._internal();
+  static SignInGoogle get shared => _instance;
+  SignInGoogle._internal();
 
   // Completer<GoogleSignInAccount?>? _loginCompleter;
 

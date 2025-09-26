@@ -122,6 +122,50 @@ sendToNative({ type: "GOOGLE_SIGN_IN_LOGOUT", data: null });
 }
 ```
 
+### Apple Sign-In
+
+⚠️ 현재는 iOS에서만 지원
+
+**요청:**
+애플 로그인
+```typescript
+sendToNative({ type: "APPLE_SIGN_IN_LOGIN", data: null });
+```
+**응답:**
+```json
+{
+  "type": "APPLE_SIGN_IN_LOGIN",
+  "data": {
+    "id": "12345678901234567890",
+    "displayName": "User Name",
+    "email": "abc@gmail.com", 
+    "photoUrl": null,
+    "idToken": "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."
+  }
+}
+```
+
+**요청:**
+애플 로그아웃 
+
+⚠️ 애플 로그아웃은 지원 하지 않음.
+```typescript
+sendToNative({ type: "APPLE_SIGN_IN_LOGOUT", data: null });
+```
+**응답:**
+```json
+{
+  "type": "APPLE_SIGN_IN_LOGOUT",
+  "data": {
+    "id": "",
+    "displayName": "",
+    "email": "", 
+    "photoUrl": "",
+    "idToken": ""
+  }
+}
+```
+
 ### RefreshToken
 
 **요청:**
