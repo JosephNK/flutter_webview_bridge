@@ -10,6 +10,8 @@ class SignInGoogle {
   static SignInGoogle get shared => _instance;
   SignInGoogle._internal();
 
+  bool _isInitialized = false;
+
   // Completer<GoogleSignInAccount?>? _loginCompleter;
 
   // https://developers.google.com/identity/protocols/oauth2/scopes?hl=ko
@@ -20,6 +22,7 @@ class SignInGoogle {
   ];
 
   void initialize({required String? googleServerClientId}) {
+    if (_isInitialized) return;
     final GoogleSignIn signIn = GoogleSignIn.instance;
     signIn.initialize(serverClientId: googleServerClientId).then((_) {
       // signIn.authenticationEvents
@@ -27,6 +30,7 @@ class SignInGoogle {
       //     .onError(_handleAuthenticationError);
       // signIn.attemptLightweightAuthentication();
     });
+    _isInitialized = true;
   }
 
   Future<Map<String, Object?>> process(
