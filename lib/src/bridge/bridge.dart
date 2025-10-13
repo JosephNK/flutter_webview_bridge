@@ -20,20 +20,30 @@ import 'events/refresh_token.dart';
 import 'events/set_clipboard.dart';
 import 'events/sign_in_apple.dart';
 import 'events/sign_in_google.dart';
+import 'events/sign_in_kakao.dart';
 
 class FlutterWebViewBridgeJavaScriptChannel {
   final BuildContext context;
   final WebViewController webViewController;
   final String channelName;
   final String? googleServerClientId;
+  final String? kakaoNativeAppKey;
 
   FlutterWebViewBridgeJavaScriptChannel({
     required this.context,
     required this.webViewController,
     this.channelName = 'IN_APP_WEBVIEW_BRIDGE_CHANNEL',
     required this.googleServerClientId,
+    required this.kakaoNativeAppKey,
   }) {
-    SignInGoogle.shared.initialize(googleServerClientId: googleServerClientId);
+    if (googleServerClientId != null) {
+      SignInGoogle.shared.initialize(
+        googleServerClientId: googleServerClientId,
+      );
+    }
+    if (kakaoNativeAppKey != null) {
+      SignInKakao.shared.initialize(nativeAppKey: kakaoNativeAppKey);
+    }
   }
 
   Future<void> addJavaScriptChannel() {
@@ -113,10 +123,28 @@ class FlutterWebViewBridgeJavaScriptChannel {
               );
               break;
             case WebViewBridgeFeatureType.appleSignInLogin:
-              sendData = await SignInApple().process(context, action: 'login');
+              sendData = await SignInApple.shared.process(
+                context,
+                action: 'login',
+              );
               break;
             case WebViewBridgeFeatureType.appleSignInLogout:
-              sendData = await SignInApple().process(context, action: 'logout');
+              sendData = await SignInApple.shared.process(
+                context,
+                action: 'logout',
+              );
+              break;
+            case WebViewBridgeFeatureType.kakaoSignInLogin:
+              sendData = await SignInKakao.shared.process(
+                context,
+                action: 'login',
+              );
+              break;
+            case WebViewBridgeFeatureType.kakaoSignInLogout:
+              sendData = await SignInKakao.shared.process(
+                context,
+                action: 'logout',
+              );
               break;
             case WebViewBridgeFeatureType.refreshTokenRead:
               sendData = await RefreshTokenEvent().process(

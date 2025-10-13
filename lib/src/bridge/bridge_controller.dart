@@ -15,11 +15,13 @@ class WebViewBridgeController {
     BuildContext context,
     WebViewController webViewController, {
     required String? googleServerClientId,
+    required String? kakaoNativeAppKey,
   }) {
     _channel ??= FlutterWebViewBridgeJavaScriptChannel(
       context: context,
       webViewController: webViewController,
       googleServerClientId: googleServerClientId,
+      kakaoNativeAppKey: kakaoNativeAppKey,
     );
     _channel?.addJavaScriptChannel();
 

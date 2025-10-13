@@ -6,6 +6,10 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../models/types.dart';
 
 class SignInApple {
+  static final SignInApple _instance = SignInApple._internal();
+  static SignInApple get shared => _instance;
+  SignInApple._internal();
+
   Future<Map<String, Object?>> process(
     BuildContext context, {
     required String action,

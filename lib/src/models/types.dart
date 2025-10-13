@@ -16,6 +16,8 @@ enum WebViewBridgeFeatureType {
   googleSignInLogout,
   appleSignInLogin,
   appleSignInLogout,
+  kakaoSignInLogin,
+  kakaoSignInLogout,
   refreshTokenRead,
   refreshTokenWrite,
   refreshTokenDelete,
@@ -58,6 +60,10 @@ extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
         return 'APPLE_SIGN_IN_LOGIN';
       case WebViewBridgeFeatureType.appleSignInLogout:
         return 'APPLE_SIGN_IN_LOGOUT';
+      case WebViewBridgeFeatureType.kakaoSignInLogin:
+        return 'KAKAO_SIGN_IN_LOGIN';
+      case WebViewBridgeFeatureType.kakaoSignInLogout:
+        return 'KAKAO_SIGN_IN_LOGOUT';
       case WebViewBridgeFeatureType.refreshTokenRead:
         return 'REFRESH_TOKEN_READ';
       case WebViewBridgeFeatureType.refreshTokenWrite:
@@ -105,6 +111,10 @@ extension WebViewBridgeFeatureTypeString on String {
         return WebViewBridgeFeatureType.appleSignInLogin;
       case 'APPLE_SIGN_IN_LOGOUT':
         return WebViewBridgeFeatureType.appleSignInLogout;
+      case 'KAKAO_SIGN_IN_LOGIN':
+        return WebViewBridgeFeatureType.kakaoSignInLogin;
+      case 'KAKAO_SIGN_IN_LOGOUT':
+        return WebViewBridgeFeatureType.kakaoSignInLogout;
       case 'REFRESH_TOKEN_READ':
         return WebViewBridgeFeatureType.refreshTokenRead;
       case 'REFRESH_TOKEN_WRITE':
