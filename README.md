@@ -166,6 +166,46 @@ sendToNative({ type: "APPLE_SIGN_IN_LOGOUT", data: null });
 }
 ```
 
+### Kakao Sign-In
+
+**요청:**
+카카오 로그인
+```typescript
+sendToNative({ type: "KAKAO_SIGN_IN_LOGIN", data: null });
+```
+**응답:**
+```json
+{
+  "type": "KAKAO_SIGN_IN_LOGIN",
+  "data": {
+    "id": "12345678901234567890",
+    "displayName": "User Name",
+    "email": "abc@gmail.com", 
+    "photoUrl": "https://k.kakaocdn.net/dn/J2zIJ/btsFQtnO1ZV/pK1jrKBXKv3L5bRiOlRfP1...",
+    "idToken": "eyjhbGci0iJ9.eyJhdWQiOiIxMDY2NjY3NzM4MzItZ..."
+  }
+}
+```
+
+**요청:**
+카카오 로그아웃
+```typescript
+sendToNative({ type: "KAKAO_SIGN_IN_LOGOUT", data: null });
+```
+**응답:**
+```json
+{
+  "type": "KAKAO_SIGN_IN_LOGOUT",
+  "data": {
+    "id": "",
+    "displayName": "",
+    "email": "", 
+    "photoUrl": "",
+    "idToken": ""
+  }
+}
+```
+
 ### RefreshToken
 
 **요청:**
