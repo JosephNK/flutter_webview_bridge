@@ -69,8 +69,8 @@ class GoogleAnalyticsEvent {
         try {
           final eventName = item['eventName'] as String?;
           final parameters = item['parameters'] as Map?;
-          if (eventName == null) {
-            sendData['error'] = 'Event name is required';
+          if (eventName == null && eventName != 'purchase') {
+            sendData['error'] = 'Event name is purchase required';
             return sendData;
           } else if (parameters == null) {
             sendData['error'] = 'Parameters are required';
@@ -84,7 +84,11 @@ class GoogleAnalyticsEvent {
           }
           if (sendParameters != null) {
             final ecommerce =
-                sendParameters['ecommerce'] as Map<String, Object>;
+                sendParameters['ecommerce'] as Map<String, Object>?;
+            if (ecommerce == null) {
+              sendData['error'] = 'Parameters are ecommerce object required';
+              return sendData;
+            }
             await FirebaseGoogleAnalytics.shared.sendLogPurchaseEvent(
               ecommerce: ecommerce,
             );
