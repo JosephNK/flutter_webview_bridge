@@ -377,14 +377,14 @@ sendToNative({ type: "EXIT_APP", data: null });
 // Google Analytics 이벤트 전송 (응답 없음)
 sendToNative({ type: "GOOGLE_ANALYTICS", data: {
     eventType: "SET_USER_ID",
-    item: {
+    data: {
         userId: "unique_user_id_here",
     }
 } });
 
 sendToNative({ type: "GOOGLE_ANALYTICS", data: {
     eventType: "SEND_LOG_EVENT",
-    item: {
+    data: {
         eventName: "event_name_here",
         parameters: {
             ...
@@ -394,7 +394,7 @@ sendToNative({ type: "GOOGLE_ANALYTICS", data: {
 
 sendToNative({ type: "GOOGLE_ANALYTICS", data: {
     eventType: "SEND_LOG_PURCHASE_EVENT",
-    item: {
+    data: {
         eventName: "purchase",
         parameters: {
             ecommerce: {
