@@ -408,6 +408,28 @@ sendToNative({ type: "GOOGLE_ANALYTICS", data: {
 sendToNative({ type: "APPS_FLYER_ANALYTICS", data: null });
 ```
 
+### 채널톡
+
+**요청:**
+```typescript
+// 채널톡 (Boot)
+sendToNative({ 
+    type: "CHANNEL_TALK_BOOT", 
+    data: {
+        pluginKey: "xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", 
+        userId: "user1234",
+        email: "user1234@gmail.com",
+        name: "홍길동"
+    } 
+});
+
+// 채널톡 (Show Messenger)
+sendToNative({ type: "CHANNEL_TALK_SHOW_MESSENGER", data: null });
+
+// 채널톡 (Shutdown)
+sendToNative({ type: "CHANNEL_TALK_SHUTDOWN", data: null });
+```
+
 ## ❌ 오류 응답
 모든 API에서 오류 발생 시:
 ```json

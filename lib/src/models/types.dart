@@ -21,6 +21,9 @@ enum WebViewBridgeFeatureType {
   refreshTokenRead,
   refreshTokenWrite,
   refreshTokenDelete,
+  channelTalkBoot,
+  channelTalkShowMessenger,
+  channelTalkShutdown,
 }
 
 extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
@@ -70,6 +73,12 @@ extension WebViewBridgeFeatureTypeValue on WebViewBridgeFeatureType {
         return 'REFRESH_TOKEN_WRITE';
       case WebViewBridgeFeatureType.refreshTokenDelete:
         return 'REFRESH_TOKEN_DELETE';
+      case WebViewBridgeFeatureType.channelTalkBoot:
+        return 'CHANNEL_TALK_BOOT';
+      case WebViewBridgeFeatureType.channelTalkShowMessenger:
+        return 'CHANNEL_TALK_SHOW_MESSENGER';
+      case WebViewBridgeFeatureType.channelTalkShutdown:
+        return 'CHANNEL_TALK_SHUTDOWN';
     }
   }
 }
@@ -121,6 +130,12 @@ extension WebViewBridgeFeatureTypeString on String {
         return WebViewBridgeFeatureType.refreshTokenWrite;
       case 'REFRESH_TOKEN_DELETE':
         return WebViewBridgeFeatureType.refreshTokenDelete;
+      case 'CHANNEL_TALK_BOOT':
+        return WebViewBridgeFeatureType.channelTalkBoot;
+      case 'CHANNEL_TALK_SHOW_MESSENGER':
+        return WebViewBridgeFeatureType.channelTalkShowMessenger;
+      case 'CHANNEL_TALK_SHUTDOWN':
+        return WebViewBridgeFeatureType.channelTalkShutdown;
     }
     return null;
   }

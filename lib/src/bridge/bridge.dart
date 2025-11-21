@@ -7,6 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../models/types.dart';
 import 'events/app_state_change.dart';
 import 'events/camera_access.dart';
+import 'events/channel_talk.dart';
 import 'events/device_info.dart';
 import 'events/exit_app.dart';
 import 'events/get_clipboard.dart';
@@ -164,6 +165,15 @@ class FlutterWebViewBridgeJavaScriptChannel {
                 context,
                 action: 'delete',
               );
+              break;
+            case WebViewBridgeFeatureType.channelTalkBoot:
+              sendData = await ChannelTalkEvent().processBoot(context, data);
+              break;
+            case WebViewBridgeFeatureType.channelTalkShowMessenger:
+              sendData = await ChannelTalkEvent().processShowMessenger(context);
+              break;
+            case WebViewBridgeFeatureType.channelTalkShutdown:
+              sendData = await ChannelTalkEvent().processShutdown(context);
               break;
           }
         } catch (e) {
